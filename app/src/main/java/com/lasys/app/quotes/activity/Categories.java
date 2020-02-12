@@ -26,22 +26,21 @@ import retrofit2.Response;
 
 public class Categories extends AppCompatActivity implements CategoriesAdapter.OnItemClickListener, View.OnClickListener {
 
-    private RecyclerView recyclerView ;
-    private GridLayoutManager gridLayoutManager ;
+    private RecyclerView recyclerView;
+    private GridLayoutManager gridLayoutManager;
 
-    private List<CatData> catList ;
-    ProgresDialog progresDialog ;
+    private List<CatData> catList;
+    ProgresDialog progresDialog;
 
-    private ImageView _back ;
+    private ImageView _back;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_categories);
 
-        recyclerView =  findViewById(R.id.categoriesRecyclerView);
-        _back        =  findViewById(R.id.arrow_back_categories);
+        recyclerView = findViewById(R.id.categoriesRecyclerView);
+        _back = findViewById(R.id.arrow_back_categories);
 
         progresDialog = new ProgresDialog(Categories.this);
         catList = new ArrayList<>();
@@ -51,41 +50,33 @@ public class Categories extends AppCompatActivity implements CategoriesAdapter.O
 
     }
 
-    private void categoriesDataCalling()
-    {
+    private void categoriesDataCalling() {
         progresDialog.progresDialogShow("Please wait...");
 
-        ApiInterface apiService =  ApiClient.getClient().create(ApiInterface.class);
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
         Call<CategoriesData> call = apiService.getCategories();
 
-        call.enqueue(new Callback<CategoriesData>()
-        {
+        call.enqueue(new Callback<CategoriesData>() {
             @Override
-            public void onResponse(Call<CategoriesData> call, Response<CategoriesData> response)
-            {
-                CategoriesData categoriesData = response.body() ;
+            public void onResponse(Call<CategoriesData> call, Response<CategoriesData> response) {
+                CategoriesData categoriesData = response.body();
 
-                if (categoriesData.getStatus() == 200)
-                {
-                    for (CatData catData : categoriesData.getData())
-                    {
+                if (categoriesData.getStatus() == 200) {
+                    for (CatData catData : categoriesData.getData()) {
                         catList.add(catData);
                     }
                     recyclerViewDataSetting(catList);
 
-                }
-                else
-                {
-                    Toast.makeText(Categories.this, ""+categoriesData.getMessage(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(Categories.this, "" + categoriesData.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<CategoriesData> call, Throwable t)
-            {
+            public void onFailure(Call<CategoriesData> call, Throwable t) {
                 progresDialog.progresDialogDissmiss();
-                Log.i("onFailure == > ",t.getMessage());
-                Toast.makeText(Categories.this, ""+t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.i("onFailure == > ", t.getMessage());
+                Toast.makeText(Categories.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
         });
@@ -93,40 +84,35 @@ public class Categories extends AppCompatActivity implements CategoriesAdapter.O
     }
 
     //** RecyclerView Data Setting START **//
-    private void recyclerViewDataSetting(List<CatData> data)
-    {
+    private void recyclerViewDataSetting(List<CatData> data) {
         //Horizontal View
         //RecyclerView.LayoutManager lm = new LinearLayoutManager(DashBoardActivity.this);
 
         //Vertical View
-        gridLayoutManager = new GridLayoutManager(Categories.this,2);
+        gridLayoutManager = new GridLayoutManager(Categories.this, 2);
         recyclerView.setLayoutManager(gridLayoutManager);
 
         //DashBoardRcvAdapter
 
-        CategoriesAdapter categoriesAdapter = new CategoriesAdapter(this,data,this);
+        CategoriesAdapter categoriesAdapter = new CategoriesAdapter(this, data, this);
         //Assigning Addapter to RecyclerView
         recyclerView.setAdapter(categoriesAdapter);
 
         progresDialog.progresDialogDissmiss();
 
     }
-     //** RecyclerView Data Setting END **//
+    //** RecyclerView Data Setting END **//
 
     @Override
-    public void onItemSelected(int Position)
-    {
-        Toast.makeText(this, "Position == >"+Position, Toast.LENGTH_SHORT).show();
+    public void onItemSelected(int Position) {
+        Toast.makeText(this, "Position == >" + Position, Toast.LENGTH_SHORT).show();
     }
 
 
     @Override
-    public void onClick(View view)
-    {
-        switch (view.getId())
-        {
-            case R.id.arrow_back_categories :
-            {
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.arrow_back_categories: {
                 finish();
                 break;
             }

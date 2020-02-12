@@ -14,35 +14,28 @@ import com.lasys.app.quotes.constants.Utils;
 
 import static com.lasys.app.quotes.intrface.AppConstants.SPLASHTIME;
 
-public class SplashActivity extends AppCompatActivity
-{
-    ProgresDialog progresDialog ;
+public class SplashActivity extends AppCompatActivity {
+    ProgresDialog progresDialog;
     SharePreference sharePreference;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        try
-        {
+        try {
             this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         setContentView(R.layout.activity_splash);
 
 //Logo Timer
-        Thread logoTimer = new Thread()
-        {
-            public void run()
-            {
+        Thread logoTimer = new Thread() {
+            public void run() {
                 try {
                     int logoTimer = 0;
-                    while (logoTimer < SPLASHTIME)
-                    {
+                    while (logoTimer < SPLASHTIME) {
                         sleep(100);
                         logoTimer = logoTimer + 100;
                     }
@@ -52,12 +45,10 @@ public class SplashActivity extends AppCompatActivity
                     startActivity(intent);
                     finish();
 
-                } catch (InterruptedException e)
-                {
+                } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
-                } finally
-                {
+                } finally {
                     finish();
                 }
             }

@@ -6,29 +6,25 @@ import android.util.AttributeSet;
 
 import static com.lasys.app.quotes.intrface.AppConstants.FONT_STYLE;
 
-public class CustomTextView extends android.support.v7.widget.AppCompatTextView
-{
-public CustomTextView(Context context, AttributeSet attrs, int defStyle)
-        {
+public class CustomTextView extends android.support.v7.widget.AppCompatTextView {
+    public CustomTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
-        }
+    }
 
-public CustomTextView(Context context, AttributeSet attrs)
-        {
+    public CustomTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
-        }
+    }
 
-public CustomTextView(Context context) {
+    public CustomTextView(Context context) {
         super(context);
         init();
-        }
+    }
 
-public void init()
-        {
+    public void init() {
         Typeface tf = Typeface.createFromAsset(getContext().getAssets(), FONT_STYLE);
-        setTypeface(tf ,1);
+        setTypeface(tf, 1);
 
-        }
+    }
 }

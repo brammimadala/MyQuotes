@@ -31,11 +31,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class QuoteDetail extends AppCompatActivity implements View.OnClickListener,FavCommunicator {
-    private TextView _qd_author_name,_qd_quote;
-    private ImageView _qd_author_image ;
-    private Toolbar  _toolbar_quoteDetail;
-    private ImageView _back ;
+public class QuoteDetail extends AppCompatActivity implements View.OnClickListener, FavCommunicator {
+    private TextView _qd_author_name, _qd_quote;
+    private ImageView _qd_author_image;
+    private Toolbar _toolbar_quoteDetail;
+    private ImageView _back;
     private String quote = "";
     private String quoteId = "";
     private String authorName = "";
@@ -44,17 +44,16 @@ public class QuoteDetail extends AppCompatActivity implements View.OnClickListen
     private View _view;
     private Menu _menu;
     private int fav = 2;
-    private boolean selectionState  ;
-    private SnackBar  snackBar ;
+    private boolean selectionState;
+    private SnackBar snackBar;
     SharePreference sharePreference;
-    ProgresDialog progresDialog ;
+    ProgresDialog progresDialog;
 
-    private int favData  ;
+    private int favData;
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quote_detail);
 
@@ -62,7 +61,7 @@ public class QuoteDetail extends AppCompatActivity implements View.OnClickListen
         setSupportActionBar(_toolbar_quoteDetail);
         getSupportActionBar().setTitle(null);
 
-        _view = findViewById(R.id.view) ;
+        _view = findViewById(R.id.view);
 
         _qd_author_name = findViewById(R.id.qd_author_name);
         _qd_quote = findViewById(R.id.qd_quote);
@@ -74,11 +73,10 @@ public class QuoteDetail extends AppCompatActivity implements View.OnClickListen
         sharePreference = new SharePreference(QuoteDetail.this);
 
 
-        snackBar = new SnackBar(this,_view);
+        snackBar = new SnackBar(this, _view);
 
         Bundle extras = getIntent().getExtras();
-        if (extras != null)
-        {
+        if (extras != null) {
             quote = extras.getString("quote");
             quoteId = extras.getString("quoteId");
             authorName = extras.getString("quoteAuthorName");
@@ -88,8 +86,7 @@ public class QuoteDetail extends AppCompatActivity implements View.OnClickListen
             _qd_quote.setText(quote);
             _qd_author_name.setText(authorName);
 
-            if (authorImage != null)
-            {
+            if (authorImage != null) {
                 Picasso.get().load(authorImage).into(_qd_author_image);
             }
         }
@@ -102,41 +99,34 @@ public class QuoteDetail extends AppCompatActivity implements View.OnClickListen
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
         _menu = menu;
 
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.selection, menu);
 
-        if (fav == 1)
-        {
+        if (fav == 1) {
             _menu.getItem(1).setIcon(ContextCompat.getDrawable(this, R.drawable.star_selected)).setVisible(false);
-            selectionState = false ;
+            selectionState = false;
         }
-        if (fav == 2)
-        {
+        if (fav == 2) {
             _menu.getItem(1).setIcon(ContextCompat.getDrawable(this, R.drawable.star)).setVisible(false);
-            selectionState = true ;
+            selectionState = true;
         }
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        switch (id)
-        {
-            case R.id.content_copy:
-            {
+        switch (id) {
+            case R.id.content_copy: {
                 // Gets a handle to the clipboard service.
-                ClipboardManager clipboard = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 
                 // Creates a new text clip to put on the clipboard
-                if (!quote.isEmpty())
-                {
+                if (!quote.isEmpty()) {
                     ClipData clip = ClipData.newPlainText("simple text", quote);
                     clipboard.setPrimaryClip(clip);
                     snackBar.showSnackbar("The quote has been copied to clipboard");
@@ -144,16 +134,12 @@ public class QuoteDetail extends AppCompatActivity implements View.OnClickListen
                 break;
             }
 
-            case R.id.select:
-            {
-                if (selectionState)
-                {
+            case R.id.select: {
+                if (selectionState) {
                     _menu.getItem(1).setIcon(ContextCompat.getDrawable(this, R.drawable.star_selected)).setVisible(false);
-                    selectionState = false ;
+                    selectionState = false;
                     addToMyFavCalling(1);
-                }
-                else
-                {
+                } else {
                     _menu.getItem(1).setIcon(ContextCompat.getDrawable(this, R.drawable.star)).setVisible(false);
                     selectionState = true;
                     addToMyFavCalling(0);
@@ -162,12 +148,10 @@ public class QuoteDetail extends AppCompatActivity implements View.OnClickListen
 
                 break;
             }
-            case R.id.share:
-            {
+            case R.id.share: {
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                if (!quote.isEmpty())
-                {
+                if (!quote.isEmpty()) {
                     sendIntent.putExtra(Intent.EXTRA_TEXT, quote);
                 }
                 sendIntent.setType("text/plain");
@@ -179,53 +163,44 @@ public class QuoteDetail extends AppCompatActivity implements View.OnClickListen
         return true;
     }
 
-   private void addToMyFavCalling(final int selStatus)
-   {
-       progresDialog.progresDialogShow("Please wait...");
+    private void addToMyFavCalling(final int selStatus) {
+        progresDialog.progresDialogShow("Please wait...");
 
-       Log.i("favDetailUserId",""+sharePreference.getUserId());
-       FavDetails favDetails = new FavDetails(""+sharePreference.getUserId(),quoteId,selStatus);
+        Log.i("favDetailUserId", "" + sharePreference.getUserId());
+        FavDetails favDetails = new FavDetails("" + sharePreference.getUserId(), quoteId, selStatus);
 
-       ApiInterface apiService =  ApiClient.getClient().create(ApiInterface.class);
-       Call<FavResponse> call = apiService.createFavourite(favDetails);
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        Call<FavResponse> call = apiService.createFavourite(favDetails);
 
-       call.enqueue(new Callback<FavResponse>()
-       {
-           @Override
-           public void onResponse(Call<FavResponse> call, Response<FavResponse> response)
-           {
-               FavResponse favResponse = response.body();
+        call.enqueue(new Callback<FavResponse>() {
+            @Override
+            public void onResponse(Call<FavResponse> call, Response<FavResponse> response) {
+                FavResponse favResponse = response.body();
 
-               Log.i("favResponse==>",""+response.code()+"\t"+response.body()+"\n"+favResponse.getStatus()+"\t"+favResponse.getMessage());
+                Log.i("favResponse==>", "" + response.code() + "\t" + response.body() + "\n" + favResponse.getStatus() + "\t" + favResponse.getMessage());
 
-               if (favResponse.getStatus() == 201 && selStatus == 1)
-               {
-                 snackBar.showSnackbar("Added to My Favourites");
-               }
-               if (favResponse.getStatus() == 201 && selStatus == 0)
-               {
-                   snackBar.showSnackbar("Deleted");
-               }
+                if (favResponse.getStatus() == 201 && selStatus == 1) {
+                    snackBar.showSnackbar("Added to My Favourites");
+                }
+                if (favResponse.getStatus() == 201 && selStatus == 0) {
+                    snackBar.showSnackbar("Deleted");
+                }
 
-           }
+            }
 
-           @Override
-           public void onFailure(Call<FavResponse> call, Throwable t)
-           {
-               progresDialog.progresDialogDissmiss();
-               Toast.makeText(QuoteDetail.this, ""+t.getMessage(), Toast.LENGTH_SHORT).show();
-           }
-       });
-       progresDialog.progresDialogDissmiss();
-   }
+            @Override
+            public void onFailure(Call<FavResponse> call, Throwable t) {
+                progresDialog.progresDialogDissmiss();
+                Toast.makeText(QuoteDetail.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        progresDialog.progresDialogDissmiss();
+    }
 
     @Override
-    public void onClick(View view)
-    {
-        switch (view.getId())
-        {
-            case R.id.arrow_back_quoteDetail :
-            {
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.arrow_back_quoteDetail: {
                 finish();
                 break;
             }
@@ -233,9 +208,8 @@ public class QuoteDetail extends AppCompatActivity implements View.OnClickListen
     }
 
     @Override
-    public void respond(int data)
-    {
-        favData = data ;
+    public void respond(int data) {
+        favData = data;
     }
 
 }

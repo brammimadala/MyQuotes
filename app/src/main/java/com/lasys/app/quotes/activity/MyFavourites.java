@@ -27,29 +27,27 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class MyFavourites extends AppCompatActivity implements View.OnClickListener
-{
-    ProgresDialog progresDialog ;
+public class MyFavourites extends AppCompatActivity implements View.OnClickListener {
+    ProgresDialog progresDialog;
 
-    private SharePreference sharePreference ;
+    private SharePreference sharePreference;
 
-    private RecyclerView  _myFavRcv ;
-    private List<QuoteData> quotesList ;
-    private SnackBar snackBar ;
+    private RecyclerView _myFavRcv;
+    private List<QuoteData> quotesList;
+    private SnackBar snackBar;
     private QuoteDetail quoteDetail;
 
-    private ImageView _back ;
+    private ImageView _back;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_favourites);
 
         _myFavRcv = findViewById(R.id.myFavRcv);
         _back = findViewById(R.id.arrow_back_favourites);
 
-        snackBar = new SnackBar(this,_back);
+        snackBar = new SnackBar(this, _back);
 
         quotesList = new ArrayList<QuoteData>();
         progresDialog = new ProgresDialog(this);
@@ -59,80 +57,65 @@ public class MyFavourites extends AppCompatActivity implements View.OnClickListe
         myFavQuotesDataCalling();
     }
 
-    private void myFavQuotesDataCalling()
-    {
+    private void myFavQuotesDataCalling() {
         progresDialog.progresDialogShow("Please wait...");
 
-        ApiInterface apiService =  ApiClient.getClient().create(ApiInterface.class);
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
 
         Call<Quote> call = apiService.getMyFavourite(sharePreference.getUserId());
 
-        call.enqueue(new Callback<Quote>()
-        {
+        call.enqueue(new Callback<Quote>() {
             @Override
-            public void onResponse(Call<Quote> call, Response<Quote> response)
-            {
-                Log.i("MyFavResponse ==>",""+response.body());
-                Quote quote = response.body() ;
-                if (quote.getStatus() == 200)
-                {
-                    for (QuoteData quoteData : quote.getData())
-                    {
+            public void onResponse(Call<Quote> call, Response<Quote> response) {
+                Log.i("MyFavResponse ==>", "" + response.body());
+                Quote quote = response.body();
+                if (quote.getStatus() == 200) {
+                    for (QuoteData quoteData : quote.getData()) {
                         quotesList.add(quoteData);
                     }
                     rcvDataSetting(quotesList);
 
-                    if (quotesList.size() > 0)
-                    {
+                    if (quotesList.size() > 0) {
                         quoteDetail.respond(1);
                     }
-                }
-                else
-                {
-                    Toast.makeText(MyFavourites.this, ""+quote.getMessage(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MyFavourites.this, "" + quote.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<Quote> call, Throwable t)
-            {
+            public void onFailure(Call<Quote> call, Throwable t) {
                 progresDialog.progresDialogDissmiss();
-                Log.i("onFailure == > ",t.getMessage());
-                Toast.makeText(MyFavourites.this, ""+t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.i("onFailure == > ", t.getMessage());
+                Toast.makeText(MyFavourites.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void rcvDataSetting(List<QuoteData> authDataList)
-    {
-       if (authDataList.isEmpty())
-       {
-           snackBar.showSnackbar("You don't have any favourites");
+    private void rcvDataSetting(List<QuoteData> authDataList) {
+        if (authDataList.isEmpty()) {
+            snackBar.showSnackbar("You don't have any favourites");
 
-       }else
-       {
+        } else {
 
-           Log.i("boolean 1 ==> ",""+sharePreference.getFavFlag());
-           sharePreference.setFavFlag(true);
-           Log.i("boolean 2 ==> ",""+sharePreference.getFavFlag());
-       }
+            Log.i("boolean 1 ==> ", "" + sharePreference.getFavFlag());
+            sharePreference.setFavFlag(true);
+            Log.i("boolean 2 ==> ", "" + sharePreference.getFavFlag());
+        }
 
         RecyclerView.LayoutManager lm = new LinearLayoutManager(MyFavourites.this);
         _myFavRcv.setLayoutManager(lm);
 
-        QuoteAdapter quoteAdapter  = new QuoteAdapter(MyFavourites.this,authDataList);
+        QuoteAdapter quoteAdapter = new QuoteAdapter(MyFavourites.this, authDataList);
         _myFavRcv.setAdapter(quoteAdapter);
 
         progresDialog.progresDialogDissmiss();
     }
 
     @Override
-    public void onClick(View view)
-    {
-        switch (view.getId())
-        {
-            case R.id.arrow_back_favourites :
-            {
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.arrow_back_favourites: {
                 finish();
                 break;
             }

@@ -39,47 +39,40 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DashBoard extends AppCompatActivity implements DashBoardRcvAdapter.DashBoardListAdapterListener
-{
-    private RecyclerView recyclerView ;
-    private GridLayoutManager gridLayoutManager ;
-    private List<DashBordData>  dashboardList ;
-    private ProgresDialog progresDialog ;
+public class DashBoard extends AppCompatActivity implements DashBoardRcvAdapter.DashBoardListAdapterListener {
+    private RecyclerView recyclerView;
+    private GridLayoutManager gridLayoutManager;
+    private List<DashBordData> dashboardList;
+    private ProgresDialog progresDialog;
     private SharePreference sharePreference;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
-    private SnackBar snackBar ;
-
+    private SnackBar snackBar;
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_board);
 
-        recyclerView =  findViewById(R.id.dashBoardRecyclerView);
+        recyclerView = findViewById(R.id.dashBoardRecyclerView);
 
-        dashboardList =new ArrayList<>();
+        dashboardList = new ArrayList<>();
         sharePreference = new SharePreference(DashBoard.this);
-        progresDialog = new ProgresDialog(DashBoard.this) ;
+        progresDialog = new ProgresDialog(DashBoard.this);
 
-        snackBar = new SnackBar(this,recyclerView);
+        snackBar = new SnackBar(this, recyclerView);
 
-        if (InternetPermission.isOnline(DashBoard.this))
-        {
+        if (InternetPermission.isOnline(DashBoard.this)) {
             dashboardDataCalling();
             UserRegistration();
-        }else
-        {
+        } else {
             snackBar.showSnackbar("Please Check internet connection");
             //Toast.makeText(this, "Please Check internet connection", Toast.LENGTH_SHORT).show();
         }
 
-        mRegistrationBroadcastReceiver = new BroadcastReceiver()
-        {
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
-            public void onReceive(Context context, Intent intent)
-            {
+            public void onReceive(Context context, Intent intent) {
                 // checking for type intent filter
                 if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
                     // gcm successfully registered
@@ -88,8 +81,7 @@ public class DashBoard extends AppCompatActivity implements DashBoardRcvAdapter.
 
                     //displayFirebaseRegId();
 
-                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION))
-                {
+                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
                     // new push notification is received
 
                     String message = intent.getStringExtra("message");
@@ -104,63 +96,54 @@ public class DashBoard extends AppCompatActivity implements DashBoardRcvAdapter.
             }
         };
 
-      // Log.i("FBToken ===> ",sharePreference.getFBToken()) ;
+        // Log.i("FBToken ===> ",sharePreference.getFBToken()) ;
     }
 
-    private void dashboardDataCalling()
-    {
+    private void dashboardDataCalling() {
         progresDialog.progresDialogShow("Please wait....");
 
-        ApiInterface apiService =  ApiClient.getClient().create(ApiInterface.class);
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
         Call<DashboardData> call = apiService.getDashBoardResponse();
 
-        call.enqueue(new Callback<DashboardData>()
-        {
+        call.enqueue(new Callback<DashboardData>() {
             @Override
-            public void onResponse(Call<DashboardData> call, Response<DashboardData> response)
-            {
-                DashboardData dashboardData = response.body() ;
+            public void onResponse(Call<DashboardData> call, Response<DashboardData> response) {
+                DashboardData dashboardData = response.body();
 
-                if (dashboardData.getStatus() == 200)
-                {
-                    for (DashBordData dashBordData : dashboardData.getData())
-                    {
+                if (dashboardData.getStatus() == 200) {
+                    for (DashBordData dashBordData : dashboardData.getData()) {
                         dashboardList.add(dashBordData);
                     }
 
                     recyclerViewDataSetting(dashboardList);
 
-                }
-                else
-                {
-                    Toast.makeText(DashBoard.this, ""+dashboardData.getMessage(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(DashBoard.this, "" + dashboardData.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<DashboardData> call, Throwable t)
-            {
+            public void onFailure(Call<DashboardData> call, Throwable t) {
                 progresDialog.progresDialogDissmiss();
 
-                Log.i("onFailure == > ",t.getMessage());
-                Toast.makeText(DashBoard.this, ""+t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.i("onFailure == > ", t.getMessage());
+                Toast.makeText(DashBoard.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
     }
 
     //** RecyclerView Data Setting START **//
-    private void recyclerViewDataSetting(List<DashBordData> list)
-    {
+    private void recyclerViewDataSetting(List<DashBordData> list) {
         //Horizontal View
         //RecyclerView.LayoutManager lm = new LinearLayoutManager(DashBoardActivity.this);
 
         //Vertical View
-        gridLayoutManager = new GridLayoutManager(DashBoard.this,2);
+        gridLayoutManager = new GridLayoutManager(DashBoard.this, 2);
         recyclerView.setLayoutManager(gridLayoutManager);
 
         //DashBoardRcvAdapter
-        DashBoardRcvAdapter dashBoardRcvAdapter = new DashBoardRcvAdapter(DashBoard.this,list,this);
+        DashBoardRcvAdapter dashBoardRcvAdapter = new DashBoardRcvAdapter(DashBoard.this, list, this);
 
         //Assigning DadhboardAddapter to RecyclerView
         recyclerView.setAdapter(dashBoardRcvAdapter);
@@ -172,56 +155,47 @@ public class DashBoard extends AppCompatActivity implements DashBoardRcvAdapter.
 
     //RecyclerView onItemSelected Start//
     @Override
-    public void onItemSelected(int Position)
-    {
+    public void onItemSelected(int Position) {
 
-       DashBordData dashBordData = dashboardList.get(Position);
-       int id =  dashBordData.getId();
-        switch (id)
-        {
-            case 1:
-            {
-                Intent intent = new Intent(this,Quotes.class);
+        DashBordData dashBordData = dashboardList.get(Position);
+        int id = dashBordData.getId();
+        switch (id) {
+            case 1: {
+                Intent intent = new Intent(this, Quotes.class);
                 startActivity(intent);
                 break;
             }
-            case 2:
-            {
-                Intent intent = new Intent(this,Authors.class);
+            case 2: {
+                Intent intent = new Intent(this, Authors.class);
                 startActivity(intent);
                 break;
             }
-            case 3:
-            {
-                Intent intent = new Intent(this,Categories.class);
+            case 3: {
+                Intent intent = new Intent(this, Categories.class);
                 startActivity(intent);
                 break;
             }
-            case 4:
-            {
-                Intent intent = new Intent(this,Quotes.class);
-                intent.putExtra("Selection","QuoteOfDay");
+            case 4: {
+                Intent intent = new Intent(this, Quotes.class);
+                intent.putExtra("Selection", "QuoteOfDay");
                 startActivity(intent);
                 break;
             }
-            case 5:
-            {
+            case 5: {
                 //Telugu Quotes
 
-                Intent intent = new Intent(this,Quotes.class);
-                intent.putExtra("Selection","TELUGU");
+                Intent intent = new Intent(this, Quotes.class);
+                intent.putExtra("Selection", "TELUGU");
                 startActivity(intent);
                 break;
             }
-            case 6:
-            {
-                Intent intent = new Intent(this,Quotes.class);
+            case 6: {
+                Intent intent = new Intent(this, Quotes.class);
                 startActivity(intent);
                 break;
             }
-            case 7:
-            {
-               // Toast.makeText(this, "Rate Us", Toast.LENGTH_SHORT).show();
+            case 7: {
+                // Toast.makeText(this, "Rate Us", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.lasys.app.quotes"));
                 startActivity(intent);
 
@@ -247,67 +221,56 @@ public class DashBoard extends AppCompatActivity implements DashBoardRcvAdapter.
     }
     //RecyclerView onItemSelected End//
 
-    private void UserRegistration()
-    {
+    private void UserRegistration() {
 
-        if (sharePreference.getRGFlag())
-        {
+        if (sharePreference.getRGFlag()) {
             //Toast.makeText(this, "Registration Successfull", Toast.LENGTH_SHORT).show();
-            Log.i("FLAG 1 ==>","Registration Successfull \t"+sharePreference.getRGFlag());
-            sendRegistrationToServer( sharePreference.getFBToken());
-        }else
-        {
-            Log.i("FLAG 2 ==>","Device Already Registered \t"+sharePreference.getRGFlag());
+            Log.i("FLAG 1 ==>", "Registration Successfull \t" + sharePreference.getRGFlag());
+            sendRegistrationToServer(sharePreference.getFBToken());
+        } else {
+            Log.i("FLAG 2 ==>", "Device Already Registered \t" + sharePreference.getRGFlag());
             //Toast.makeText(this, "Device Already Registered", Toast.LENGTH_SHORT).show();
         }
 
     }
 
-    private void sendRegistrationToServer(String token)
-    {
+    private void sendRegistrationToServer(String token) {
         progresDialog.progresDialogShow("Please wait...");
-        UserDetails userDetails = new UserDetails(token, Utils.getDeviceName(),Utils.getDeviceModel(),Utils.getSDK());
-        ApiInterface apiService =  ApiClient.getClient().create(ApiInterface.class);
+        UserDetails userDetails = new UserDetails(token, Utils.getDeviceName(), Utils.getDeviceModel(), Utils.getSDK());
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
         Call<UserCreate> call = apiService.userCreate(userDetails);
 
         //sharePreference.setTokenFlag(false);
 
-        call.enqueue(new Callback<UserCreate>()
-        {
+        call.enqueue(new Callback<UserCreate>() {
             @Override
-            public void onResponse(Call<UserCreate> call, Response<UserCreate> response)
-            {
-                UserCreate userCreate  = response.body();
-                UserCreateData userCreateData =  userCreate.getUserCreateData();
+            public void onResponse(Call<UserCreate> call, Response<UserCreate> response) {
+                UserCreate userCreate = response.body();
+                UserCreateData userCreateData = userCreate.getUserCreateData();
 
-                if (userCreate.getStatus() == 201)
-                {
+                if (userCreate.getStatus() == 201) {
                     sharePreference.setUserId(userCreateData.getUserId());
-                    Log.i("USER_ID ==>", ""+userCreateData.getUserId());
+                    Log.i("USER_ID ==>", "" + userCreateData.getUserId());
                     //Toast.makeText(DashBoard.this, "MyUserId == "+sharePreference.getUserId(), Toast.LENGTH_SHORT).show();
                     sharePreference.setRGFlag(false);
-                    Log.i("RgFlag ==>", ""+sharePreference.getRGFlag());
-                }
-                else
-                {
-                    Toast.makeText(DashBoard.this, ""+userCreate.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.i("RgFlag ==>", "" + sharePreference.getRGFlag());
+                } else {
+                    Toast.makeText(DashBoard.this, "" + userCreate.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<UserCreate> call, Throwable t)
-            {
+            public void onFailure(Call<UserCreate> call, Throwable t) {
                 progresDialog.progresDialogDissmiss();
-                Log.d("onFailure == > ", ""+t.getMessage());
-                Toast.makeText(DashBoard.this, ""+t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.d("onFailure == > ", "" + t.getMessage());
+                Toast.makeText(DashBoard.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
         progresDialog.progresDialogDissmiss();
     }
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
         // register GCM registration complete receiver
         LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
@@ -323,8 +286,7 @@ public class DashBoard extends AppCompatActivity implements DashBoardRcvAdapter.
     }
 
     @Override
-    protected void onPause()
-    {
+    protected void onPause() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
         super.onPause();
     }

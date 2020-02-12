@@ -18,71 +18,60 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class DashBoardRcvAdapter extends RecyclerView.Adapter<DashBoardRcvAdapter.MyHolder>
-{
-   private  Context mcontext;
-   private List<DashBordData> dashBordDataList;
-   private DashBoardListAdapterListener mlistener;
+public class DashBoardRcvAdapter extends RecyclerView.Adapter<DashBoardRcvAdapter.MyHolder> {
+    private Context mcontext;
+    private List<DashBordData> dashBordDataList;
+    private DashBoardListAdapterListener mlistener;
 
-   public DashBoardRcvAdapter(Context context , List<DashBordData> list, DashBoardListAdapterListener listener)
-   {
-       mcontext = context;
-       mlistener = listener ;
-       dashBordDataList = list ;
-   }
+    public DashBoardRcvAdapter(Context context, List<DashBordData> list, DashBoardListAdapterListener listener) {
+        mcontext = context;
+        mlistener = listener;
+        dashBordDataList = list;
+    }
 
     @NonNull
     @Override
-    public MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
-    {
-        LayoutInflater li = (LayoutInflater)mcontext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = li.inflate(R.layout.dashboard_item_style,parent,false);
+    public MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater li = (LayoutInflater) mcontext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = li.inflate(R.layout.dashboard_item_style, parent, false);
 
         MyHolder my = new MyHolder(v);
         return my;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyHolder holder, final int position)
-    {
-        DashBordData dashBordData = dashBordDataList.get(position) ;
+    public void onBindViewHolder(@NonNull MyHolder holder, final int position) {
+        DashBordData dashBordData = dashBordDataList.get(position);
         holder.textView.setText(dashBordData.getMenuName());
 
-        if (dashBordData.getMenuImage() != null)
-        {
+        if (dashBordData.getMenuImage() != null) {
             Picasso.get().load(dashBordData.getMenuImage()).into(holder.imageView);
         }
 
     }
 
     @Override
-    public int getItemCount()
-    {
+    public int getItemCount() {
         return dashBordDataList.size();
     }
 
-    public class MyHolder extends RecyclerView.ViewHolder
-    {
+    public class MyHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         TextView textView;
         LinearLayout layout;
 
-        public MyHolder(View itemView)
-        {
+        public MyHolder(View itemView) {
             super(itemView);
-            imageView   = itemView.findViewById(R.id.dis_imageView);
-            textView    = itemView.findViewById(R.id.dis_TextView);
-            layout      = itemView.findViewById(R.id.dis_linerLayout);
+            imageView = itemView.findViewById(R.id.dis_imageView);
+            textView = itemView.findViewById(R.id.dis_TextView);
+            layout = itemView.findViewById(R.id.dis_linerLayout);
 
-            itemView.setOnClickListener(new View.OnClickListener()
-            {
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view)
-                {
-                    int position =  getAdapterPosition();
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
 
-                    if ( mlistener != null && position != RecyclerView.NO_POSITION  )
-                    {
+                    if (mlistener != null && position != RecyclerView.NO_POSITION) {
                         mlistener.onItemSelected(position);
                     }
                 }
@@ -91,8 +80,7 @@ public class DashBoardRcvAdapter extends RecyclerView.Adapter<DashBoardRcvAdapte
 
     }
 
-    public interface DashBoardListAdapterListener
-    {
+    public interface DashBoardListAdapterListener {
         void onItemSelected(int Position);
     }
 }

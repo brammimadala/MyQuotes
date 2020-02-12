@@ -18,43 +18,37 @@ import java.util.Enumeration;
 
 import static android.content.Context.WIFI_SERVICE;
 
-public class Utils
-{
+public class Utils {
     public static int TYPE_NOT_CONNECTED = 0;
 
     public static int TYPE_WIFI = 1;
     public static int TYPE_MOBILE = 2;
 
     public static String IPaddress;
-    public static  Boolean IPValue;
+    public static Boolean IPValue;
     public static Context mcontext;
 
-    public Utils(Context context)
-    {
+    public Utils(Context context) {
         mcontext = context;
     }
 
-    public static String getDeviceName()
-    {
-         return  android.os.Build.MANUFACTURER;
+    public static String getDeviceName() {
+        return android.os.Build.MANUFACTURER;
     }
 
-    public static String getDeviceModel()
-    {
-        return   android.os.Build.MODEL;
+    public static String getDeviceModel() {
+        return android.os.Build.MODEL;
     }
 
-    public static String getSDK()
-    {
-        return String.valueOf(" SDK "+ Build.VERSION.SDK_INT+", RELEASE "+Build.VERSION.RELEASE);
+    public static String getSDK() {
+        return String.valueOf(" SDK " + Build.VERSION.SDK_INT + ", RELEASE " + Build.VERSION.RELEASE);
     }
 
-    public static String getRelease()
-    {
+    public static String getRelease() {
         return Build.VERSION.RELEASE;
     }
 
-    public  void hideKeyboard(@NonNull Activity activity) {
+    public void hideKeyboard(@NonNull Activity activity) {
         // Check if no view has focus:
         View view = activity.getCurrentFocus();
         if (view != null) {
@@ -67,16 +61,16 @@ public class Utils
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         if (null != activeNetwork) {
-            if(activeNetwork.getType() == ConnectivityManager.TYPE_WIFI)
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI)
                 return TYPE_WIFI;
 
-            if(activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE)
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE)
                 return TYPE_MOBILE;
         }
         return TYPE_NOT_CONNECTED;
     }
 
-    public  String getConnectivityStatusString(Context context) {
+    public String getConnectivityStatusString(Context context) {
         int conn = Utils.getConnectivityStatus(context);
         String status = null;
         if (conn == Utils.TYPE_WIFI) {
@@ -90,18 +84,17 @@ public class Utils
     }
 
     //Check the internet connection.
-    public  String networkIPAddress() {
+    public String networkIPAddress() {
 
         boolean WIFI = false;
 
         boolean MOBILE = false;
 
-        ConnectivityManager CM = (ConnectivityManager)mcontext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager CM = (ConnectivityManager) mcontext.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo[] networkInfo = CM.getAllNetworkInfo();
 
-        for (NetworkInfo netInfo : networkInfo)
-        {
+        for (NetworkInfo netInfo : networkInfo) {
 
             if (netInfo.getTypeName().equalsIgnoreCase("WIFI"))
 
@@ -116,32 +109,29 @@ public class Utils
                     MOBILE = true;
         }
 
-        if(WIFI == true)
-        {
+        if (WIFI == true) {
             IPaddress = GetDeviceipWiFiData();
             //Log.i("WIFI IP == ",IPaddress);
         }
 
-        if(MOBILE == true)
-        {
+        if (MOBILE == true) {
             IPaddress = GetDeviceipMobileData();
             //Log.i("MOBILE IP == ",IPaddress);
         }
         return IPaddress;
     }
 
-    public static String GetDeviceipMobileData(){
+    public static String GetDeviceipMobileData() {
         try {
             for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces();
-                 en.hasMoreElements();) {
+                 en.hasMoreElements(); ) {
                 NetworkInterface networkinterface = en.nextElement();
-                for (Enumeration<InetAddress> enumIpAddr = networkinterface.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                for (Enumeration<InetAddress> enumIpAddr = networkinterface.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
                     InetAddress inetAddress = enumIpAddr.nextElement();
-                    if (!inetAddress.isLoopbackAddress())
-                    {
+                    if (!inetAddress.isLoopbackAddress()) {
                         String ip = Formatter.formatIpAddress(inetAddress.hashCode());
                         // return inetAddress.getHostAddress().toString();
-                        return ip ;
+                        return ip;
                     }
                 }
             }
@@ -151,9 +141,8 @@ public class Utils
         return null;
     }
 
-    public static String GetDeviceipWiFiData()
-    {
-        WifiManager wm = (WifiManager)mcontext.getSystemService(WIFI_SERVICE);
+    public static String GetDeviceipWiFiData() {
+        WifiManager wm = (WifiManager) mcontext.getSystemService(WIFI_SERVICE);
         @SuppressWarnings("deprecation")
         String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
         return ip;
