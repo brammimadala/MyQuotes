@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "741749043077",
+    "firebase_url": "https://myquotes-a935f.firebaseio.com",
+    "project_id": "myquotes-a935f",
+    "storage_bucket": "myquotes-a935f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:741749043077:android:a37f4eebaeb838f6",
+        "android_client_info": {
+          "package_name": "com.lasys.app.quotes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "741749043077-io79mfcbdmbpo32cv9chp2k4f24obdnl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkAuC89ZTStzbvDNNeqT-gsMEoTi1e89c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "741749043077-io79mfcbdmbpo32cv9chp2k4f24obdnl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

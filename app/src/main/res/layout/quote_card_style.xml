@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView
+    android:id="@+id/client_Card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="2dp"
+    app:cardElevation="5dp"
+    android:layout_margin="5dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:id="@+id/clientProfileImage"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="5dp"
+            android:src="@drawable/happy"
+            app:layout_constraintTop_toBottomOf="@+id/quote_text"
+            app:layout_constraintBottom_toTopOf="@+id/quote_author_name"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginRight="10dp"
+            android:paddingRight="10dp"/>
+
+        <com.lasys.app.quotes.constants.CustomTextView
+            android:id="@+id/quote_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textSize="15sp"
+            android:layout_marginBottom="5dp"
+            android:text="The Pessimist Sees Difficulty In Every Opportunity. The Optimist Sees Opportunity In Every Difficulty."
+            app:layout_constraintStart_toEndOf="@id/clientProfileImage"
+            app:layout_constraintTop_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginEnd="15dip"
+            android:textColor="@color/colorBlack"
+            app:layout_constraintBottom_toTopOf="@+id/quote_author_name"/>
+
+          <com.lasys.app.quotes.constants.CustomTextView
+            android:id="@+id/quote_author_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlue"
+            android:text=""
+            android:layout_marginLeft="5dp"
+            android:layout_marginBottom="5dp"
+            android:textSize="15sp"
+            android:singleLine="true"
+            app:layout_constraintStart_toEndOf="@id/clientProfileImage"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/quote_text"
+            app:layout_constraintBottom_toTopOf="parent"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.v7.widget.CardView>
